@@ -16,18 +16,18 @@ public class ChatSessionTest {
                 new Question("Q2", "A2")
         )), new SimpleEvaluator());
 
-        assertTrue(s.intro().contains("Привет"));
+        assertTrue(s.intro().contains("Hi"));
         assertEquals("Q1", s.nextQuestion());
 
         String help = s.evaluate("\\help");
         assertTrue(help.contains("\\help"));
 
-        assertEquals("Верно!", s.evaluate("A1"));
+        assertEquals("Correct!", s.evaluate("A1"));
         assertEquals(1, s.correctCount());
         assertEquals(1, s.askedCount());
 
         assertEquals("Q2", s.nextQuestion());
-        assertTrue(s.evaluate("wrong").startsWith("Неверно"));
+        assertTrue(s.evaluate("wrong").startsWith("Incorrect."));
         assertEquals(1, s.correctCount());
     }
 }
