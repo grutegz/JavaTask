@@ -1,4 +1,4 @@
-package app.questions;
+package questions;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package app.questions;
+package questions;
 
 public interface QuestionSource {
     Question next();

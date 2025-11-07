@@ -1,7 +1,7 @@
-package app.logic;
+package logic;
 
-import app.questions.Question;
-import app.questions.QuestionSource;
+import questions.Question;
+import questions.QuestionSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,18 +13,20 @@ public final class ChatSession {
 
 	private final QuestionSource source;
 	private final Evaluator evaluator;
+    private final boolean shuffleQs;
 
 	private final Random rng = new Random();
-	private final List<Question> buffer = new ArrayList<>();
+	private final List<Question> questionList = new ArrayList<>();
 
 	private Question current;
 	private int asked = 0;
 	private int correct = 0;
 
-	public ChatSession(QuestionSource source, Evaluator evaluator) {
+	public ChatSession(QuestionSource source, Evaluator evaluator, boolean shuffleQs) {
 		if (source == null || evaluator == null) throw new IllegalArgumentException();
 		this.source = source;
 		this.evaluator = evaluator;
+        this.shuffleQs = shuffleQs;
 	}
 
     public String intro() {
@@ -43,8 +45,8 @@ public final class ChatSession {
     }
 
 	public String nextQuestion() {
-		ensureBuffer();
-		current = buffer.remove(buffer.size() - 1);
+		ensureList();
+		current = questionList.removeLast();
 		asked++;
 		return current.text();
 	}
@@ -72,12 +74,14 @@ public final class ChatSession {
 		return correct;
 	}
 
-	private void ensureBuffer() {
-		if (buffer.isEmpty()) {
-			for (int i = 0; i < BUFFER_SIZE; i++) {
-				buffer.add(source.next());
-			}
-			Collections.shuffle(buffer, rng);
-		}
-	}
+    private void ensureList() {
+        if (questionList.isEmpty()) {
+            for (int i = 0; i < BUFFER_SIZE; i++) {
+                questionList.add(source.next());
+            }
+            if (shuffleQs) {
+                Collections.shuffle(questionList, rng);
+            }
+        }
+    }
 }

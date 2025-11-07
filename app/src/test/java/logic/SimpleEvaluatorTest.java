@@ -1,6 +1,6 @@
-package app.logic;
+package logic;
 
-import app.questions.Question;
+import questions.Question;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

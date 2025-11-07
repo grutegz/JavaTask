@@ -1,9 +1,9 @@
-package app.console;
+package cli;
 
-import app.logic.ChatSession;
-import app.logic.SimpleEvaluator;
-import app.questions.Question;
-import app.questions.StaticQuestionSource;
+import logic.ChatSession;
+import logic.SimpleEvaluator;
+import questions.Question;
+import questions.StaticQuestionSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +23,7 @@ public final class Main {
 		new Question("x^2 - 15x + 54 = 0","9"),//6, 9
 		new Question("x^2 - 2x - 63 = 0","9")//-7, 9
 		);
-		ChatSession session = new ChatSession(new StaticQuestionSource(qs), new SimpleEvaluator());
+		ChatSession session = new ChatSession(new StaticQuestionSource(qs), new SimpleEvaluator(), true);
 		Scanner sc = new Scanner(System.in);
 		System.out.println(session.intro());
 		System.out.println("Question: " + session.nextQuestion());

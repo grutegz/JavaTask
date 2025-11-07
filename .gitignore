@@ -1,2 +1,12 @@
+.gradle/
+**/build/
+**/out/
+**/lib/
+gradle/
+
 .idea/
-/out/
+
+gradle.*
+gradlew*
+build.gradle.kts
+settings.gradle.kts

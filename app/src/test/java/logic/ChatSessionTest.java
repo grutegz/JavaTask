@@ -1,7 +1,7 @@
-package app.logic;
+package logic;
 
-import app.questions.Question;
-import app.questions.StaticQuestionSource;
+import questions.Question;
+import questions.StaticQuestionSource;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ public class ChatSessionTest {
         ChatSession s = new ChatSession(new StaticQuestionSource(Arrays.asList(
                 new Question("Q1", "A1"),
                 new Question("Q2", "A2")
-        )), new SimpleEvaluator());
+        )), new SimpleEvaluator(), false);
 
         assertTrue(s.intro().contains("Hi"));
         assertEquals("Q1", s.nextQuestion());

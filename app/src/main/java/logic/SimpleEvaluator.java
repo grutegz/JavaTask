@@ -1,6 +1,6 @@
-package app.logic;
+package logic;
 
-import app.questions.Question;
+import questions.Question;
 import java.util.Locale;
 
 public final class SimpleEvaluator implements Evaluator {

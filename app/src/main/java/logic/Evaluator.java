@@ -1,6 +1,6 @@
-package app.logic;
+package logic;
 
-import app.questions.Question;
+import questions.Question;
 
 public interface Evaluator {
     boolean isCorrect(Question q, String userAnswer);
