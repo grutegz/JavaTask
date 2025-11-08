@@ -46,7 +46,7 @@ public final class ChatSession {
 
 	public String nextQuestion() {
 		ensureList();
-		current = questionList.removeLast();
+		current = questionList.remove(0);
 		asked++;
 		return current.text();
 	}
