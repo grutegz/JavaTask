@@ -14,7 +14,7 @@ public final class FileQuestionSource implements QuestionSource {
     public FileQuestionSource(Path path, String delimiter) {
         try {
             questions = Files.lines(path)
-                    .map(l -> l.split("\\|", 2))
+                    .map(l -> l.split(delimiter, 2))
                     .map(p -> new Question(p[0], p[1]))
                     .toList();
         } catch (IOException e) {
