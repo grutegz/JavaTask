@@ -29,20 +29,43 @@ public final class ChatSession {
         this.shuffleQs = shuffleQs;
 	}
 
-    public String intro() {
-	return "Hi! I will give you quadratic equations (ax^2 + bx + c = 0).\n"
-		 + "Your task: type ONLY the larger root. Type \\help for details.";
-    }
+	public String intro() {
+		return """
+    Привет! Я буду задавать задачи по математике: 
+    — квадратные уравнения, 
+    — прогрессии (геометрическая), 
+    — суммы первых n членов (AP/GP).
+    Чтобы посмотреть правила и примеры — введите \\help.
+    """;
+	}
 
-    public String help() {
-	return "What to do:\n"
-		 + "- I show a quadratic equation like  x^2 - 5x + 6 = 0\n"
-		 + "- Find both roots and send the larger one\n\n"
-		 + "Input format:\n"
-		 + "- Just the number (f.e. \"4.5\",\"-9\")\n\n"
-		 + "Commands:\n"
-		 + "- \\help - show this message\n";
-    }
+	public String help() {
+		return """
+    Что делать:
+    — Я показываю вопрос. Твоя задача — ввести ответ (обычно целое число) и нажать Enter.
+
+    Типы задач:
+    1) Квадратное уравнение: ax^2 + bx + c = 0
+       Что вводить: больший корень уравнения.
+       Пример: «x^2 - 5x + 6 = 0» → корни 2 и 3 → ответ: 3
+
+    2) Геометрическая прогрессия (a_n):
+       Дано: a1, r, n. Найдите a_n = a1 · r^(n−1).
+
+    3) Сумма арифметической прогрессии (S_n):
+       Дано: a1, d, n. Найдите S_n = n/2 · (2a1 + (n−1)d).
+
+    4) Сумма геометрической прогрессии (S_n):
+       Дано: a1, r, n. Найдите S_n = a1 + a1·r + ... + a1·r^(n−1).
+
+    Формат ответа:
+    — Вводите целое число, без лишних пробелов (например: 7, -12, 0).
+    — На текущем этапе все ответы целые.
+
+    Команда:
+    — \\help — показать это сообщение.
+    """;
+	}
 
 	public String nextQuestion() {
 		ensureList();

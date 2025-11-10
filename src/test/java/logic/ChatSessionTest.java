@@ -1,4 +1,4 @@
-package logic;
+package test.java.logic;
 
 import questions.Question;
 import questions.StaticQuestionSource;
