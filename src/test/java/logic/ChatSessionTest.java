@@ -1,20 +1,32 @@
 package logic;
 
-import questions.Question;
-import questions.StaticQuestionSource;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.IOException;
+import java.nio.file.*;
+
+import questions.FileQuestionSource;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ChatSessionTest {
+    @TempDir
+    Path tempDir;
+
     @Test
-    public void flowHelpAndAnswers() {
-        ChatSession s = new ChatSession(new StaticQuestionSource(Arrays.asList(
-                new Question("Q1", "A1"),
-                new Question("Q2", "A2")
-        )), new SimpleEvaluator(), false);
+    public void flowHelpAndAnswers() throws IOException {
+        Path file = tempDir.resolve("test.txt");
+        List<String> lines = List.of("Q1|A1","Q2|A2");
+        Files.write(file, lines);
+
+        ChatSession s = new ChatSession(new FileQuestionSource(file, "\\|"),
+                new SimpleEvaluator(), false);
 
         assertTrue(s.intro().contains("Hi"));
         assertEquals("Q1", s.nextQuestion());
