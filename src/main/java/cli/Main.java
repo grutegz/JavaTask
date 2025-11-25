@@ -1,7 +1,10 @@
 package cli;
 
 import logic.ChatSession;
+import logic.EvaluationResult;
 import logic.SimpleEvaluator;
+import logic.UserProfile;
+import logic.UserProfileService;
 import questions.FileQuestionSource;
 import questions.QuestionSource;
 import questions.Question;
@@ -14,13 +17,23 @@ import java.util.Scanner;
 
 public final class Main {
     public static void main(String[] args) {
+        UserProfileService profileService = new UserProfileService();
+        Runtime.getRuntime().addShutdownHook(new Thread(profileService::saveProfilesToFile));
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Добро пожаловать в математический квиз!");
+        System.out.print("Введите ваше имя пользователя для отслеживания прогресса: ");
+        String username = scanner.nextLine().trim();
+        UserProfile profile = profileService.getProfile(username);
+        System.out.printf("Привет, %s! Ваш прошлый прогресс загружен.%n", username);
+        System.out.println(profile.toString());
+
         QuestionSource source = new QuestionSource() {
             private final java.util.Random rng = new java.util.Random();
             private final QuestionSource[] sources = new QuestionSource[] {
-                    new FileQuestionSource(Path.of("questions.txt"), "\\|"), // твои квадратики из файла
-                    new GeometricSequenceQuestionSource(),                   // a_n геометрической прогрессии
-                    new ArithmeticSumQuestionSource(),                       // S_n арифметической прогрессии
-                    new GeometricSumQuestionSource()                         // S_n геометрической прогрессии
+                    new FileQuestionSource(Path.of("questions.txt"), "\\|"),
+                    new GeometricSequenceQuestionSource(),
+                    new ArithmeticSumQuestionSource(),
+                    new GeometricSumQuestionSource()
             };
             @Override
             public Question next() {
@@ -29,19 +42,35 @@ public final class Main {
         };
 
         ChatSession session = new ChatSession(source, new SimpleEvaluator(), true);
-
-        Scanner sc = new Scanner(System.in);
         System.out.println(session.intro());
         System.out.println("Question: " + session.nextQuestion());
 
         while (true) {
-            String line = sc.nextLine();
-            if (line != null && line.trim().equals("\\help")) {
-                System.out.println(session.help());
-                System.out.println("Question: " + session.currentQuestion());
-            } else {
-                System.out.println(session.evaluate(line));
-                System.out.println("Question: " + session.nextQuestion());
+            String userInput = scanner.nextLine();
+
+            if (userInput == null) {
+                break;
+            }
+
+            switch (userInput.trim().toLowerCase()) {
+                case "\\exit":
+                    System.out.println("Спасибо за игру! Ваш прогресс будет сохранен.");
+                    System.exit(0);
+                    break;
+                case "\\help":
+                    System.out.println(session.help());
+                    System.out.println("Current question: " + session.currentQuestion());
+                    break;
+                case "\\profile":
+                    System.out.println(profile.toString());
+                    System.out.println("Current question: " + session.currentQuestion());
+                    break;
+                default:
+                    EvaluationResult result = session.evaluate(userInput);
+                    profile.processAnswer(result.isCorrect());
+                    System.out.println(result.getMessage());
+                    System.out.println("Question: " + session.nextQuestion());
+                    break;
             }
         }
     }

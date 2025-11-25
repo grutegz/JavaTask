@@ -11,7 +11,7 @@ public final class StaticQuestionSource implements QuestionSource {
 
     public StaticQuestionSource(List<Question> questions) {
         if (questions == null || questions.isEmpty()) throw new IllegalArgumentException("questions must not be empty");
-        this.questions = Collections.unmodifiableList(new ArrayList<>(questions));
+        this.questions = Collections.unmodifiableList(questions);
     }
 
     public StaticQuestionSource(Question... questions) {
