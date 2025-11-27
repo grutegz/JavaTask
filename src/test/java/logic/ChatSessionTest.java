@@ -19,15 +19,15 @@ public class ChatSessionTest {
         assertTrue(s.intro().contains("Hi"));
         assertEquals("Q1", s.nextQuestion());
 
-        String help = s.evaluate("\\help");
+        String help = String.valueOf(s.evaluate("\\help"));
         assertTrue(help.contains("\\help"));
 
-        assertEquals("Correct!", s.evaluate("A1"));
+        assertEquals("Correct!", s.evaluate("A1").toString());
         assertEquals(1, s.correctCount());
         assertEquals(1, s.askedCount());
 
         assertEquals("Q2", s.nextQuestion());
-        assertTrue(s.evaluate("wrong").startsWith("Incorrect."));
+        assertEquals(s.evaluate("wrong").toString(),"Incorrect.");
         assertEquals(1, s.correctCount());
     }
 }
