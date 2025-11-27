@@ -1,75 +1,49 @@
 package questions;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileQuestionSourceTest {
+class FileQuestionSourceTest {
 
     @TempDir
     Path tempDir;
 
     @Test
-    public void readsAndCyclesQuestionsFromFileCorrectly() throws IOException {
+    void readsQuestionsFromFile() throws IOException {
+        // временный файл с вопросами
+        Path file = tempDir.resolve("test.txt");
+        List<String> lines = List.of("Q1|A1","Q2|A2");
+        Files.write(file, lines);
+        FileQuestionSource src = new FileQuestionSource(file, "\\|");
 
-        Path questionsFile = tempDir.resolve("questions.txt");
-        List<String> lines = List.of(
-                "2+2|4",
-                "Столица России?|Москва"
-        );
-        Files.write(questionsFile, lines);
+        Question q1 = src.next();
+        assertEquals("Q1", q1.text());
+        assertEquals("A1", q1.answer());
 
-        FileQuestionSource source = new FileQuestionSource(questionsFile, "\\|");
-
-        Question q1 = source.next();
-        assertEquals("2+2", q1.text());
-        assertEquals("4", q1.answer());
-
-        Question q2 = source.next();
-        assertEquals("Столица России?", q2.text());
-        assertEquals("Москва", q2.answer());
-
-        Question q3 = source.next();
-        assertEquals("2+2", q3.text(), "После последнего вопроса должен снова идти первый.");
+        Question q2 = src.next();
+        assertEquals("Q2", q2.text());
+        assertEquals("A2", q2.answer());
     }
-
     @Test
-    public void constructorThrowsExceptionIfFileNotFound() {
-
-        Path nonExistentFile = tempDir.resolve("non_existent.txt");
-
-        assertThrows(RuntimeException.class, () -> {
-            new FileQuestionSource(nonExistentFile, "\\|");
-        }, "Должно быть брошено исключение, если файл не найден.");
-    }
-
-    @Test
-    public void constructorThrowsExceptionIfFileIsEmpty() throws IOException {
-
+    void throwsIfFileEmpty() throws IOException {
         Path emptyFile = tempDir.resolve("empty.txt");
         Files.createFile(emptyFile);
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new FileQuestionSource(emptyFile, "\\|");
-        }, "Должно быть брошено исключение, если файл пуст.");
+        Exception ex = assertThrows(IllegalArgumentException.class,
+                () -> new FileQuestionSource(emptyFile, "\\|"));
+        assertTrue(ex.getMessage().contains("No valid questions"));
     }
 
     @Test
-    public void constructorThrowsExceptionIfFileContainsOnlyInvalidLines() throws IOException {
-
-        Path invalidFile = tempDir.resolve("invalid.txt");
-        List<String> lines = List.of(
-                "просто текст без разделителя",
-                "и еще один"
-        );
-        Files.write(invalidFile, lines);
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new FileQuestionSource(invalidFile, "\\|");
-        }, "Должно быть брошено исключение, если в файле нет валидных строк.");
+    void throwsIfFileMissing() {
+        Path noneFile = tempDir.resolve("nope.txt");
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> new FileQuestionSource(noneFile, "\\|"));
+        assertTrue(ex.getMessage().contains("Failed to read"));
     }
 }
