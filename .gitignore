@@ -3,7 +3,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -20,7 +19,6 @@ target/
 .springBeans
 .sts4-cache
 
-### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -34,4 +32,11 @@ build/
 .idea/
 
 .DS_Store
-pom.xml
+
+# игнорировать все txt, кроме questions.txt
+*.txt
+!questions.txt
+# игнорировать все json
+*.json
+# игнорировать user_profiles.json
+#user_profiles.json
