@@ -11,6 +11,7 @@ import questions.Question;
 import questions.GeometricSequenceQuestionSource;
 import questions.ArithmeticSumQuestionSource;
 import questions.GeometricSumQuestionSource;
+import questions.*;
 
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -27,19 +28,12 @@ public final class Main {
         System.out.printf("Привет, %s! Ваш прошлый прогресс загружен.%n", username);
         System.out.println(profile.toString());
 
-        QuestionSource source = new QuestionSource() {
-            private final java.util.Random rng = new java.util.Random();
-            private final QuestionSource[] sources = new QuestionSource[] {
-                    new FileQuestionSource(Path.of("questions.txt"), "\\|"),
-                    new GeometricSequenceQuestionSource(),
-                    new ArithmeticSumQuestionSource(),
-                    new GeometricSumQuestionSource()
-            };
-            @Override
-            public Question next() {
-                return sources[rng.nextInt(sources.length)].next();
-            }
-        };
+        QuestionSource source = new RandomQuestionSource(
+                new FileQuestionSource(Path.of("questions.txt"), "\\|"),
+                new GeometricSequenceQuestionSource(),
+                new ArithmeticSumQuestionSource(),
+                new GeometricSumQuestionSource()
+        );
 
         ChatSession session = new ChatSession(source, new SimpleEvaluator(), true);
         System.out.println(session.intro());
