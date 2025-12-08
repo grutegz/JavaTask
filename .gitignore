@@ -40,3 +40,5 @@ build/
 *.json
 # игнорировать user_profiles.json
 #user_profiles.json
+# игорировать файл с данными конфигурации
+config.properties

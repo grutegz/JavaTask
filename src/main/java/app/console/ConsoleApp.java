@@ -1,32 +1,23 @@
-package cli;
+package app.console;
 
-import logic.ChatSession;
-import logic.EvaluationResult;
-import logic.SimpleEvaluator;
-import logic.UserProfile;
-import logic.UserProfileService;
-import questions.FileQuestionSource;
-import questions.QuestionSource;
-import questions.Question;
-import questions.GeometricSequenceQuestionSource;
-import questions.ArithmeticSumQuestionSource;
-import questions.GeometricSumQuestionSource;
+import logic.*;
 import questions.*;
-
 import java.nio.file.Path;
 import java.util.Scanner;
 
-public final class Main {
+public class ConsoleApp {
     public static void main(String[] args) {
+        // Логика инициализации сервисов и получения профиля
         UserProfileService profileService = new UserProfileService();
         Runtime.getRuntime().addShutdownHook(new Thread(profileService::saveProfilesToFile));
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Добро пожаловать в математический квиз!");
-        System.out.print("Введите ваше имя пользователя для отслеживания прогресса: ");
+
+        System.out.println("Добро пожаловать в консольный математический квиз!");
+        System.out.print("Введите ваше имя пользователя: ");
         String username = scanner.nextLine().trim();
         UserProfile profile = profileService.getProfile(username);
         System.out.printf("Привет, %s! Ваш прошлый прогресс загружен.%n", username);
-        System.out.println(profile.toString());
+        System.out.println(profile);
 
         QuestionSource source = new RandomQuestionSource(
                 new FileQuestionSource(Path.of("questions.txt"), "\\|"),
@@ -41,10 +32,7 @@ public final class Main {
 
         while (true) {
             String userInput = scanner.nextLine();
-
-            if (userInput == null) {
-                break;
-            }
+            if (userInput == null) break;
 
             switch (userInput.trim().toLowerCase()) {
                 case "\\exit":
@@ -56,7 +44,7 @@ public final class Main {
                     System.out.println("Current question: " + session.currentQuestion());
                     break;
                 case "\\profile":
-                    System.out.println(profile.toString());
+                    System.out.println(profile);
                     System.out.println("Current question: " + session.currentQuestion());
                     break;
                 default:
