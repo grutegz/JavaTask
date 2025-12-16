@@ -1,6 +1,5 @@
 package logic;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -83,10 +82,7 @@ public class LeaderboardService {
 
         StringBuilder sb = new StringBuilder("🏆 " + title + " 🏆\n\n");
 
-        // --- ЛОГИКА ОТОБРАЖЕНИЯ (ПОЛНОСТЬЮ ПЕРЕПИСАНА) ---
-
         int userPosition = -1;
-        // Находим позицию текущего пользователя
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).getUsername().equals(currentUser.getUsername())) {
                 userPosition = i;
@@ -94,7 +90,6 @@ public class LeaderboardService {
             }
         }
 
-        // Показываем до 5 лучших игроков
         int topSize = Math.min(5, entries.size());
         for (int i = 0; i < topSize; i++) {
             LeaderboardEntry entry = entries.get(i);
@@ -103,8 +98,6 @@ public class LeaderboardService {
                     i + 1, entry.getUsername(), scoreFormatter.apply(entry.getScore()), suffix));
         }
 
-        // Если пользователь существует в рейтинге, но не попал в отображаемый топ,
-        // добавляем его позицию в конце.
         if (userPosition != -1 && userPosition >= topSize) {
             sb.append("...\n");
             sb.append(String.format("%d. %s - %s (Это вы)\n",
@@ -112,7 +105,6 @@ public class LeaderboardService {
                     currentUser.getUsername(),
                     scoreFormatter.apply(scoreExtractor.apply(currentUser))));
         } else if (userPosition == -1 && filter.test(currentUser)) {
-            // Этот случай почти невозможен, но для полноты картины
         } else if (!filter.test(currentUser)) {
             sb.append("\nВашего рекорда еще нет в этой таблице.");
         }
