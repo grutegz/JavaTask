@@ -1,2 +1,2 @@
-# JavaTask
-study
+# TextJavaBot
+study project
