@@ -10,20 +10,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Финальные тесты для LeaderboardService.
- * Использует "поддельную" реализацию UserProfileService для полной изоляции.
- */
 public class LeaderboardServiceTest {
 
-    // Вложенный класс-заглушка для изоляции от файловой системы
     private static class FakeUserProfileService extends UserProfileService {
         private List<UserProfile> profilesToReturn = Collections.emptyList();
-        // Пустой конструктор, чтобы не читать файлы
         public FakeUserProfileService() { super(); }
-        // Метод для "программирования" заглушки
         public void setProfilesToReturn(List<UserProfile> profiles) { this.profilesToReturn = profiles; }
-        // Переопределяем метод, который будет вызываться
         @Override
         public Collection<UserProfile> getAllProfiles() { return profilesToReturn; }
     }
@@ -31,7 +23,6 @@ public class LeaderboardServiceTest {
     private FakeUserProfileService fakeProfileService;
     private LeaderboardService leaderboardService;
 
-    // Тестовые пользователи
     private UserProfile alice, bob, charlie, david;
 
     @BeforeEach
@@ -104,10 +95,9 @@ public class LeaderboardServiceTest {
 
         fakeProfileService.setProfilesToReturn(List.of(user1, user2, user3, user4, user5, user6_you));
 
-        // Act: Запрашиваем лидерборд для 6-го пользователя
+        //лидерборд для 6-го пользователя
         String leaderboard = leaderboardService.getSprintLeaderboard(user6_you);
 
-        // Assert
         assertTrue(leaderboard.contains("5. User5 - 12 очков\n"), "Пятый игрок должен быть в топе");
         assertTrue(leaderboard.contains("...\n6. You - 10 очков (Это вы)"), "Ваша 6-я позиция должна быть показана в конце");
     }
@@ -115,13 +105,11 @@ public class LeaderboardServiceTest {
     @Test
     @DisplayName("Показывает сообщение, если у пользователя нет рекорда в данной категории")
     void getLeaderboard_showsInfoMessage_ifUserHasNoRecord() {
-        // Arrange: David не играл в спринт
+        //David не играл в спринт
         fakeProfileService.setProfilesToReturn(List.of(alice, bob));
 
-        // Act: Запрашиваем для него таблицу спринта
         String leaderboard = leaderboardService.getSprintLeaderboard(david);
 
-        // Assert
         assertTrue(leaderboard.contains("Вашего рекорда еще нет в этой таблице"));
     }
 }
